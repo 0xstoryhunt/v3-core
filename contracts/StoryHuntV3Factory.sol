@@ -13,6 +13,8 @@ import './StoryHuntV3Pool.sol';
 contract StoryHuntV3Factory is IStoryHuntV3Factory, StoryHuntV3PoolDeployer, NoDelegateCall {
     /// @inheritdoc IStoryHuntV3Factory
     address public override owner;
+    // Added for two-step ownership transfer
+    address private _pendingOwner;
 
     /// @inheritdoc IStoryHuntV3Factory
     mapping(uint24 => int24) public override feeAmountTickSpacing;
@@ -51,10 +53,23 @@ contract StoryHuntV3Factory is IStoryHuntV3Factory, StoryHuntV3PoolDeployer, NoD
     }
 
     /// @inheritdoc IStoryHuntV3Factory
-    function setOwner(address _owner) external override {
+    /// @notice Starts a two-step ownership transfer process
+    /// @dev Only current owner can call. Emits OwnershipTransferStarted.
+    function transferOwnership(address newOwner) external override {
         require(msg.sender == owner);
-        emit OwnerChanged(owner, _owner);
-        owner = _owner;
+        _pendingOwner = newOwner;
+        emit OwnershipTransferStarted(owner, newOwner);
+    }
+
+    /// @inheritdoc IStoryHuntV3Factory
+    /// @notice The pendingOwner must call this to accept ownership
+    /// @dev Once accepted, emits OwnerChanged and clears _pendingOwner.
+    function acceptOwnership() external override {
+        require(_pendingOwner == msg.sender);
+        address oldOwner = owner;
+        owner = _pendingOwner;
+        _pendingOwner = address(0);
+        emit OwnerChanged(oldOwner, owner);
     }
 
     /// @inheritdoc IStoryHuntV3Factory
