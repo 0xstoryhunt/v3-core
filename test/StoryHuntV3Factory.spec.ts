@@ -123,25 +123,34 @@ describe('StoryHuntV3Factory', () => {
     })
   })
 
-  describe('#setOwner', () => {
-    it('fails if caller is not owner', async () => {
-      await expect(factory.connect(other).setOwner(wallet.address)).to.be.reverted
+  describe('#transferOwnership and #acceptOwnership', () => {
+    it('fails if caller is not owner for transferOwnership', async () => {
+      await expect(factory.connect(other).transferOwnership(other.address)).to.be.reverted
     })
 
-    it('updates owner', async () => {
-      await factory.setOwner(other.address)
+    it('emits OwnershipTransferStarted and sets pending owner', async () => {
+      await expect(factory.transferOwnership(other.address))
+        .to.emit(factory, 'OwnershipTransferStarted')
+        .withArgs(wallet.address, other.address)
+      // no direct way to read _pendingOwner, but we know it's set internally
+    })
+
+    it('fails if someone other than pendingOwner calls acceptOwnership', async () => {
+      await factory.transferOwnership(other.address)
+      await expect(factory.acceptOwnership()).to.be.reverted
+    })
+
+    it('pendingOwner can accept ownership', async () => {
+      await factory.transferOwnership(other.address)
+      await expect(factory.connect(other).acceptOwnership())
+        .to.emit(factory, 'OwnerChanged')
+        .withArgs(wallet.address, other.address)
       expect(await factory.owner()).to.eq(other.address)
     })
 
-    it('emits event', async () => {
-      await expect(factory.setOwner(other.address))
-        .to.emit(factory, 'OwnerChanged')
-        .withArgs(wallet.address, other.address)
-    })
-
-    it('cannot be called by original owner', async () => {
-      await factory.setOwner(other.address)
-      await expect(factory.setOwner(wallet.address)).to.be.reverted
+    it('original owner cannot call acceptOwnership', async () => {
+      await factory.transferOwnership(other.address)
+      await expect(factory.acceptOwnership()).to.be.reverted
     })
   })
 
