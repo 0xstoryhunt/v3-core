@@ -28,8 +28,13 @@ interface IStoryHuntV3Factory {
     /// @param tickSpacing The minimum number of ticks between initialized ticks for pools created with the given fee
     event FeeAmountEnabled(uint24 indexed fee, int24 indexed tickSpacing);
 
+    /// @notice Emitted when a two-step ownership transfer is initiated
+    /// @param oldOwner The owner before the ownership transfer started
+    /// @param newOwner The newOwner that will accept the ownership
+    event OwnershipTransferStarted(address indexed oldOwner, address indexed newOwner);
+
     /// @notice Returns the current owner of the factory
-    /// @dev Can be changed by the current owner via setOwner
+    /// @dev Can be changed by the current owner via transferOwnership and acceptOwnership
     /// @return The address of the factory owner
     function owner() external view returns (address);
 
@@ -57,10 +62,13 @@ interface IStoryHuntV3Factory {
     /// @return pool The address of the newly created pool
     function createPool(address tokenA, address tokenB, uint24 fee) external returns (address pool);
 
-    /// @notice Updates the owner of the factory
-    /// @dev Must be called by the current owner
-    /// @param _owner The new owner of the factory
-    function setOwner(address _owner) external;
+    /// @notice Initiates a two-step ownership transfer by setting a pending owner
+    /// @dev Can only be called by the current owner
+    /// @param newOwner The address that will accept ownership
+    function transferOwnership(address newOwner) external;
+
+    /// @notice The pending owner calls this function to finalize the ownership transfer
+    function acceptOwnership() external;
 
     /// @notice Enables a fee amount with the given tickSpacing
     /// @dev Fee amounts may never be removed once enabled
