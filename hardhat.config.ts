@@ -1,7 +1,7 @@
 import 'hardhat-typechain'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-waffle'
-import '@nomicfoundation/hardhat-verify'; 
+import '@nomicfoundation/hardhat-verify'; // Updated plugin
 
 export default {
   networks: {
@@ -62,8 +62,8 @@ export default {
         network: "Odyssey",
         chainId: 1516,
         urls: {
-          apiURL: "https://odyssey-testnet-explorer.storyscan.xyz/api",
-          browserURL: "https://odyssey-testnet-explorer.storyscan.xyz"
+          apiURL: "https://odyssey.storyscan.xyz/api",
+          browserURL: "https://odyssey.storyscan.xyz/"
         }
       }
     ]
@@ -76,7 +76,7 @@ export default {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 800,
+        runs: 200,
       },
       metadata: {
         // do not include the metadata hash, since this is machine dependent
