@@ -21,6 +21,11 @@ contract StoryHuntV3Factory is IStoryHuntV3Factory, StoryHuntV3PoolDeployer, NoD
     /// @inheritdoc IStoryHuntV3Factory
     mapping(address => mapping(address => mapping(uint24 => address))) public override getPool;
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        _;
+    }
+
     constructor() {
         owner = msg.sender;
         emit OwnerChanged(address(0), msg.sender);
@@ -84,5 +89,9 @@ contract StoryHuntV3Factory is IStoryHuntV3Factory, StoryHuntV3PoolDeployer, NoD
 
         feeAmountTickSpacing[fee] = tickSpacing;
         emit FeeAmountEnabled(fee, tickSpacing);
+    }
+
+     function setLmPool(address pool, address lmPool) external override onlyOwner{
+        IStoryHuntV3Pool(pool).setLmPool(lmPool);
     }
 }
