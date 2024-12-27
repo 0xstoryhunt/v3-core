@@ -27,6 +27,9 @@ import './interfaces/callback/IStoryHuntV3MintCallback.sol';
 import './interfaces/callback/IStoryHuntV3SwapCallback.sol';
 import './interfaces/callback/IStoryHuntV3FlashCallback.sol';
 
+import "./interfaces/lmpool/ILMPool.sol";
+
+
 contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
     using LowGasSafeMath for uint256;
     using LowGasSafeMath for int256;
@@ -97,6 +100,11 @@ contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
     mapping(bytes32 => Position.Info) public override positions;
     /// @inheritdoc IStoryHuntV3PoolState
     Oracle.Observation[65535] public override observations;
+
+    // liquidity mining
+    IStoryHuntV3LmPool public lmPool;
+
+    event SetLmPoolEvent(address addr);
 
     /// @dev Mutually exclusive reentrancy protection into the pool to/from a method. This method also prevents entrance
     /// to a function before the pool is initialized. The reentrancy guard is required throughout the contract because
@@ -620,6 +628,10 @@ contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
             computedLatestObservation: false
         });
 
+        if (address(lmPool) != address(0)) {
+            lmPool.accumulateReward(cache.blockTimestamp);
+        }
+
         bool exactInput = amountSpecified > 0;
 
         SwapState memory state = SwapState({
@@ -701,6 +713,11 @@ contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
                         );
                         cache.computedLatestObservation = true;
                     }
+
+                    if (address(lmPool) != address(0)) {
+                        lmPool.crossLmTick(step.tickNext, zeroForOne);
+                    }
+
                     int128 liquidityNet = ticks.cross(
                         step.tickNext,
                         (zeroForOne ? state.feeGrowthGlobalX128 : feeGrowthGlobal0X128),
@@ -858,5 +875,11 @@ contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
         }
 
         emit CollectProtocol(msg.sender, recipient, amount0, amount1);
+    }
+
+    function setLmPool(address _lmPool) external override onlyFactoryOwner {
+        lmPool = IStoryHuntV3LmPool(_lmPool);
+
+        emit SetLmPoolEvent(_lmPool);
     }
 }
