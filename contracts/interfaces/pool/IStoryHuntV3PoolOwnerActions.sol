@@ -20,4 +20,7 @@ interface IStoryHuntV3PoolOwnerActions {
         uint128 amount0Requested,
         uint128 amount1Requested
     ) external returns (uint128 amount0, uint128 amount1);
+
+    /// @notice Set the LM pool to enable liquidity mining
+    function setLmPool(address lmPool) external;
 }

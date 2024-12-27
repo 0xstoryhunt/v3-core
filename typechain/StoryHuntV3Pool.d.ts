@@ -33,6 +33,7 @@ interface StoryHuntV3PoolInterface extends ethers.utils.Interface {
     "increaseObservationCardinalityNext(uint16)": FunctionFragment;
     "initialize(uint160)": FunctionFragment;
     "liquidity()": FunctionFragment;
+    "lmPool()": FunctionFragment;
     "maxLiquidityPerTick()": FunctionFragment;
     "mint(address,int24,int24,uint128,bytes)": FunctionFragment;
     "observations(uint256)": FunctionFragment;
@@ -40,6 +41,7 @@ interface StoryHuntV3PoolInterface extends ethers.utils.Interface {
     "positions(bytes32)": FunctionFragment;
     "protocolFees()": FunctionFragment;
     "setFeeProtocol(uint8,uint8)": FunctionFragment;
+    "setLmPool(address)": FunctionFragment;
     "slot0()": FunctionFragment;
     "snapshotCumulativesInside(int24,int24)": FunctionFragment;
     "swap(address,bool,int256,uint160,bytes)": FunctionFragment;
@@ -85,6 +87,7 @@ interface StoryHuntV3PoolInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "liquidity", values?: undefined): string;
+  encodeFunctionData(functionFragment: "lmPool", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "maxLiquidityPerTick",
     values?: undefined
@@ -113,6 +116,7 @@ interface StoryHuntV3PoolInterface extends ethers.utils.Interface {
     functionFragment: "setFeeProtocol",
     values: [BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "setLmPool", values: [string]): string;
   encodeFunctionData(functionFragment: "slot0", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "snapshotCumulativesInside",
@@ -157,6 +161,7 @@ interface StoryHuntV3PoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "liquidity", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "lmPool", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "maxLiquidityPerTick",
     data: BytesLike
@@ -176,6 +181,7 @@ interface StoryHuntV3PoolInterface extends ethers.utils.Interface {
     functionFragment: "setFeeProtocol",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setLmPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "slot0", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "snapshotCumulativesInside",
@@ -200,6 +206,7 @@ interface StoryHuntV3PoolInterface extends ethers.utils.Interface {
     "Initialize(uint160,int24)": EventFragment;
     "Mint(address,address,int24,int24,uint128,uint256,uint256)": EventFragment;
     "SetFeeProtocol(uint8,uint8,uint8,uint8)": EventFragment;
+    "SetLmPoolEvent(address)": EventFragment;
     "Swap(address,address,int256,int256,uint160,uint128,int24)": EventFragment;
   };
 
@@ -213,6 +220,7 @@ interface StoryHuntV3PoolInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Initialize"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Mint"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SetFeeProtocol"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SetLmPoolEvent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Swap"): EventFragment;
 }
 
@@ -372,6 +380,18 @@ export class StoryHuntV3Pool extends Contract {
       0: BigNumber;
     }>;
 
+    lmPool(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
+    "lmPool()"(
+      overrides?: CallOverrides
+    ): Promise<{
+      0: string;
+    }>;
+
     maxLiquidityPerTick(
       overrides?: CallOverrides
     ): Promise<{
@@ -509,6 +529,16 @@ export class StoryHuntV3Pool extends Contract {
     "setFeeProtocol(uint8,uint8)"(
       feeProtocol0: BigNumberish,
       feeProtocol1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    setLmPool(
+      _lmPool: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setLmPool(address)"(
+      _lmPool: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -791,6 +821,10 @@ export class StoryHuntV3Pool extends Contract {
 
   "liquidity()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+  lmPool(overrides?: CallOverrides): Promise<string>;
+
+  "lmPool()"(overrides?: CallOverrides): Promise<string>;
+
   maxLiquidityPerTick(overrides?: CallOverrides): Promise<BigNumber>;
 
   "maxLiquidityPerTick()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -920,6 +954,16 @@ export class StoryHuntV3Pool extends Contract {
   "setFeeProtocol(uint8,uint8)"(
     feeProtocol0: BigNumberish,
     feeProtocol1: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  setLmPool(
+    _lmPool: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setLmPool(address)"(
+    _lmPool: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1201,6 +1245,10 @@ export class StoryHuntV3Pool extends Contract {
 
     "liquidity()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    lmPool(overrides?: CallOverrides): Promise<string>;
+
+    "lmPool()"(overrides?: CallOverrides): Promise<string>;
+
     maxLiquidityPerTick(overrides?: CallOverrides): Promise<BigNumber>;
 
     "maxLiquidityPerTick()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1340,6 +1388,13 @@ export class StoryHuntV3Pool extends Contract {
     "setFeeProtocol(uint8,uint8)"(
       feeProtocol0: BigNumberish,
       feeProtocol1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setLmPool(_lmPool: string, overrides?: CallOverrides): Promise<void>;
+
+    "setLmPool(address)"(
+      _lmPool: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1561,6 +1616,8 @@ export class StoryHuntV3Pool extends Contract {
       feeProtocol1New: null
     ): EventFilter;
 
+    SetLmPoolEvent(addr: null): EventFilter;
+
     Swap(
       sender: string | null,
       recipient: string | null,
@@ -1675,6 +1732,10 @@ export class StoryHuntV3Pool extends Contract {
 
     "liquidity()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    lmPool(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "lmPool()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     maxLiquidityPerTick(overrides?: CallOverrides): Promise<BigNumber>;
 
     "maxLiquidityPerTick()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1737,6 +1798,13 @@ export class StoryHuntV3Pool extends Contract {
     "setFeeProtocol(uint8,uint8)"(
       feeProtocol0: BigNumberish,
       feeProtocol1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    setLmPool(_lmPool: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setLmPool(address)"(
+      _lmPool: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -1915,6 +1983,10 @@ export class StoryHuntV3Pool extends Contract {
 
     "liquidity()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    lmPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "lmPool()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     maxLiquidityPerTick(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1984,6 +2056,16 @@ export class StoryHuntV3Pool extends Contract {
     "setFeeProtocol(uint8,uint8)"(
       feeProtocol0: BigNumberish,
       feeProtocol1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setLmPool(
+      _lmPool: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setLmPool(address)"(
+      _lmPool: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

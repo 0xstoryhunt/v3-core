@@ -766,6 +766,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "lmPool",
+        type: "address",
+      },
+    ],
+    name: "setLmPool",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "slot0",
     outputs: [

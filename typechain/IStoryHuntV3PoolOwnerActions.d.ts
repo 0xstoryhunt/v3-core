@@ -24,6 +24,7 @@ interface IStoryHuntV3PoolOwnerActionsInterface extends ethers.utils.Interface {
   functions: {
     "collectProtocol(address,uint128,uint128)": FunctionFragment;
     "setFeeProtocol(uint8,uint8)": FunctionFragment;
+    "setLmPool(address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -34,6 +35,7 @@ interface IStoryHuntV3PoolOwnerActionsInterface extends ethers.utils.Interface {
     functionFragment: "setFeeProtocol",
     values: [BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "setLmPool", values: [string]): string;
 
   decodeFunctionResult(
     functionFragment: "collectProtocol",
@@ -43,6 +45,7 @@ interface IStoryHuntV3PoolOwnerActionsInterface extends ethers.utils.Interface {
     functionFragment: "setFeeProtocol",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setLmPool", data: BytesLike): Result;
 
   events: {};
 }
@@ -86,6 +89,16 @@ export class IStoryHuntV3PoolOwnerActions extends Contract {
       feeProtocol1: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    setLmPool(
+      lmPool: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setLmPool(address)"(
+      lmPool: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
   collectProtocol(
@@ -111,6 +124,16 @@ export class IStoryHuntV3PoolOwnerActions extends Contract {
   "setFeeProtocol(uint8,uint8)"(
     feeProtocol0: BigNumberish,
     feeProtocol1: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  setLmPool(
+    lmPool: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setLmPool(address)"(
+    lmPool: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -150,6 +173,13 @@ export class IStoryHuntV3PoolOwnerActions extends Contract {
       feeProtocol1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    setLmPool(lmPool: string, overrides?: CallOverrides): Promise<void>;
+
+    "setLmPool(address)"(
+      lmPool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {};
@@ -180,6 +210,13 @@ export class IStoryHuntV3PoolOwnerActions extends Contract {
       feeProtocol1: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    setLmPool(lmPool: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setLmPool(address)"(
+      lmPool: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -206,6 +243,16 @@ export class IStoryHuntV3PoolOwnerActions extends Contract {
     "setFeeProtocol(uint8,uint8)"(
       feeProtocol0: BigNumberish,
       feeProtocol1: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setLmPool(
+      lmPool: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setLmPool(address)"(
+      lmPool: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
