@@ -10,9 +10,12 @@ import './StoryHuntV3Pool.sol';
 
 /// @title Canonical StoryHunt V3 factory
 /// @notice Deploys StoryHunt V3 pools and manages ownership and control over pool protocol fees
-contract StoryHuntV3Factory is IStoryHuntV3Factory, StoryHuntV3PoolDeployer, NoDelegateCall {
+contract StoryHuntV3Factory is IStoryHuntV3Factory, NoDelegateCall {
     /// @inheritdoc IStoryHuntV3Factory
     address public override owner;
+
+    address public immutable poolDeployer;
+
     // Added for two-step ownership transfer
     address private _pendingOwner;
 
@@ -26,7 +29,8 @@ contract StoryHuntV3Factory is IStoryHuntV3Factory, StoryHuntV3PoolDeployer, NoD
         _;
     }
 
-    constructor() {
+    constructor(address _poolDeployer) {
+        poolDeployer = _poolDeployer;
         owner = msg.sender;
         emit OwnerChanged(address(0), msg.sender);
 
@@ -50,7 +54,7 @@ contract StoryHuntV3Factory is IStoryHuntV3Factory, StoryHuntV3PoolDeployer, NoD
         int24 tickSpacing = feeAmountTickSpacing[fee];
         require(tickSpacing != 0);
         require(getPool[token0][token1][fee] == address(0));
-        pool = deploy(address(this), token0, token1, fee, tickSpacing);
+        pool = IStoryHuntV3PoolDeployer(poolDeployer).deploy(address(this), token0, token1, fee, tickSpacing);
         getPool[token0][token1][fee] = pool;
         // populate mapping in the reverse direction, deliberate choice to avoid the cost of comparing addresses
         getPool[token1][token0][fee] = pool;
