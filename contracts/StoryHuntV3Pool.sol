@@ -117,8 +117,8 @@ contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
     }
 
     /// @dev Prevents calling a function from anyone except the address returned by IStoryHuntV3Factory#owner()
-    modifier onlyFactoryOwner() {
-        require(msg.sender == IStoryHuntV3Factory(factory).owner());
+    modifier onlyFactoryOrFactoryOwner() {
+        require(msg.sender == factory || msg.sender == IStoryHuntV3Factory(factory).owner());
         _;
     }
 
@@ -844,7 +844,7 @@ contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
     }
 
     /// @inheritdoc IStoryHuntV3PoolOwnerActions
-    function setFeeProtocol(uint8 feeProtocol0, uint8 feeProtocol1) external override lock onlyFactoryOwner {
+    function setFeeProtocol(uint8 feeProtocol0, uint8 feeProtocol1) external override lock onlyFactoryOrFactoryOwner {
         require(
             (feeProtocol0 == 0 || (feeProtocol0 >= 4 && feeProtocol0 <= 10)) &&
                 (feeProtocol1 == 0 || (feeProtocol1 >= 4 && feeProtocol1 <= 10))
@@ -859,7 +859,7 @@ contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
         address recipient,
         uint128 amount0Requested,
         uint128 amount1Requested
-    ) external override lock onlyFactoryOwner returns (uint128 amount0, uint128 amount1) {
+    ) external override lock onlyFactoryOrFactoryOwner returns (uint128 amount0, uint128 amount1) {
         amount0 = amount0Requested > protocolFees.token0 ? protocolFees.token0 : amount0Requested;
         amount1 = amount1Requested > protocolFees.token1 ? protocolFees.token1 : amount1Requested;
 
@@ -877,7 +877,7 @@ contract StoryHuntV3Pool is IStoryHuntV3Pool, NoDelegateCall {
         emit CollectProtocol(msg.sender, recipient, amount0, amount1);
     }
 
-    function setLmPool(address _lmPool) external override onlyFactoryOwner {
+    function setLmPool(address _lmPool) external override onlyFactoryOrFactoryOwner {
         lmPool = IStoryHuntV3LmPool(_lmPool);
 
         emit SetLmPoolEvent(_lmPool);

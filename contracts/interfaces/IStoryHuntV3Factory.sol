@@ -33,6 +33,9 @@ interface IStoryHuntV3Factory {
     /// @param newOwner The newOwner that will accept the ownership
     event OwnershipTransferStarted(address indexed oldOwner, address indexed newOwner);
 
+    /// @notice Emitted when LM pool deployer is set
+    event SetLmPoolDeployer(address indexed lmPoolDeployer);
+
     /// @notice Returns the current owner of the factory
     /// @dev Can be changed by the current owner via transferOwnership and acceptOwnership
     /// @return The address of the factory owner
@@ -77,5 +80,7 @@ interface IStoryHuntV3Factory {
     function enableFeeAmount(uint24 fee, int24 tickSpacing) external;
 
     function setLmPool(address pool, address lmPool) external;
+
+    function setLmPoolDeployer(address _lmPoolDeployer) external;
 
 }

@@ -7,6 +7,7 @@ import './StoryHuntV3PoolDeployer.sol';
 import './NoDelegateCall.sol';
 
 import './StoryHuntV3Pool.sol';
+import "hardhat/console.sol";
 
 /// @title Canonical StoryHunt V3 factory
 /// @notice Deploys StoryHunt V3 pools and manages ownership and control over pool protocol fees
@@ -24,8 +25,15 @@ contract StoryHuntV3Factory is IStoryHuntV3Factory, NoDelegateCall {
     /// @inheritdoc IStoryHuntV3Factory
     mapping(address => mapping(address => mapping(uint24 => address))) public override getPool;
 
+    address public lmPoolDeployer;
+
     modifier onlyOwner() {
         require(msg.sender == owner, "Not owner");
+        _;
+    }
+
+     modifier onlyOwnerOrLmPoolDeployer() {
+        require(msg.sender == owner || msg.sender == lmPoolDeployer, "Not owner or LM pool deployer");
         _;
     }
 
@@ -95,7 +103,13 @@ contract StoryHuntV3Factory is IStoryHuntV3Factory, NoDelegateCall {
         emit FeeAmountEnabled(fee, tickSpacing);
     }
 
-     function setLmPool(address pool, address lmPool) external override onlyOwner{
+     function setLmPool(address pool, address lmPool) external override onlyOwnerOrLmPoolDeployer{
+        console.log("setLmPool", pool, lmPool);
         IStoryHuntV3Pool(pool).setLmPool(lmPool);
+    }
+
+    function setLmPoolDeployer(address _lmPoolDeployer) external override onlyOwner {
+        lmPoolDeployer = _lmPoolDeployer;
+        emit SetLmPoolDeployer(_lmPoolDeployer);
     }
 }
