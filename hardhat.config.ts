@@ -2,6 +2,7 @@ import 'hardhat-typechain'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-waffle'
 import '@nomicfoundation/hardhat-verify'; 
+import "@nomicfoundation/hardhat-foundry";
 
 export default {
   networks: {
