@@ -24,6 +24,8 @@ interface IStoryHuntV3PoolDeployer {
             int24 tickSpacing
         );
 
+    function setFactoryAddress(address _factoryAddress) external;
+
     function deploy(
         address factory,
         address token0,

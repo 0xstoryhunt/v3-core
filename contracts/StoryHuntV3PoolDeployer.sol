@@ -27,7 +27,7 @@ contract StoryHuntV3PoolDeployer is IStoryHuntV3PoolDeployer {
         _;
     }
 
-    function setFactoryAddress(address _factoryAddress) external {
+    function setFactoryAddress(address _factoryAddress) override external {
         require(factoryAddress == address(0), "already initialized");
 
         factoryAddress = _factoryAddress;

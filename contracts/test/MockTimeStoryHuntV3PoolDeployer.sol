@@ -5,7 +5,7 @@ import '../interfaces/IStoryHuntV3PoolDeployer.sol';
 
 import './MockTimeStoryHuntV3Pool.sol';
 
-contract MockTimeStoryHuntV3PoolDeployer is IStoryHuntV3PoolDeployer {
+abstract contract MockTimeStoryHuntV3PoolDeployer is IStoryHuntV3PoolDeployer {
     struct Parameters {
         address factory;
         address token0;
